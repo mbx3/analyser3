@@ -65,9 +65,10 @@ for i,d in enumerate(data[:-1]):
 keys=sorted(deltas)
 with open('report.txt','w') as f:
     f.write(f'##General##\nLosts : {numLost}\nWons : {numWon}\nBalance : {balance}\nSequential Losts : {maxDistance} (id : {int(maxDisLine)})\nMin Balance : {minBalance}\n\n##Coefs##\n')
-    f.write('%-5s  \t\t%-5s\t\t%-5s\t\t%-5s\n'%('',"Len",'Avg','Max'))
+    f.write('%-5s  \t\t%-5s\t\t%-5s\t\t%-5s\t\t%-5s\n'%('',"Len",'Avg','Max','Lost'))
     for c in keys:
         ln=len(deltas[c])
         avg=mean(deltas[c])
-        mx=max(deltas[c])        
-        f.write('%-5.2f :\t\t%-5d\t\t%-5.2f\t\t%-5d\n'%(c,ln,avg,mx))
+        mx=max(deltas[c])
+        nlost=len([i for i in deltas[c] if i>0])        
+        f.write('%-5.2f :\t\t%-5d\t\t%-5.2f\t\t%-5d\t\t%-5d(%-5.2f%%)\n'%(c,ln,avg,mx,nlost,nlost/ln*100))
