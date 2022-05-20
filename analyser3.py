@@ -2,6 +2,7 @@ from math import floor
 from statistics import mean
 import mysql.connector
 import sys
+from draw_plot import draw
 
 
 conn = mysql.connector.connect(user = 'root',
@@ -32,6 +33,8 @@ with open("data.txt","r") as f:
         conditions.append(list(map(float,l.split())))
 
 deltas={}
+bets=[]
+bln=[]
 for i,d in enumerate(data[:-1]):
     target=0
     for c in conditions:
@@ -41,6 +44,10 @@ for i,d in enumerate(data[:-1]):
             break
     
     if target==0: continue
+
+    if data[i+1]>=target :y=1
+    else: y=0
+    bets.append([target,y])
 
     n=1
     while (i+n<len(data) and data[i+n]<target):
@@ -61,6 +68,7 @@ for i,d in enumerate(data[:-1]):
             maxDistance=n-1
             maxDisLine=lines[i]
         if balance<minBalance: minBalance=balance
+    bln.append(balance)
 
 keys=sorted(deltas)
 with open('report.txt','w') as f:
@@ -72,3 +80,6 @@ with open('report.txt','w') as f:
         mx=max(deltas[c])
         nlost=len([i for i in deltas[c] if i>0])        
         f.write('%-5.2f :\t\t%-5d\t\t%-5.2f\t\t%-5d\t\t%-5d(%-5.2f%%)\n'%(c,ln,avg,mx,nlost,nlost/ln*100))
+
+
+draw(bets,bln)
